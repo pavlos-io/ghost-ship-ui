@@ -1,0 +1,7 @@
+one:
+  creator: alice
+  source: github_actions
+
+two:
+  creator: bob
+  source: manual_upload

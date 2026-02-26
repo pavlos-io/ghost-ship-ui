@@ -1,0 +1,51 @@
+<%= link_to "\u2190 Back to runs", runs_path, class: "inline-block text-sm text-gray-500 hover:text-gray-700 mb-4" %>
+
+<% if run.status.in?(%w[queued running]) %>
+  <meta name="turbo-refresh-scroll" content="preserve">
+  <meta http-equiv="refresh" content="3">
+<% end %>
+
+<div class="bg-white rounded-2xl p-4 sm:p-6 mb-6 shadow">
+  <div class="flex items-center justify-between mb-3">
+    <h1 class="text-xl sm:text-2xl font-bold">Run #<%= run.id %></h1>
+    <% badge_class = case run.status
+       when "queued" then "bg-yellow-100 text-yellow-800"
+       when "running" then "bg-blue-100 text-blue-800"
+       when "completed" then "bg-green-100 text-green-800"
+       when "failed" then "bg-red-100 text-red-800"
+       end %>
+    <span class="<%= badge_class %> text-xs font-medium px-2.5 py-0.5 rounded-full"><%= run.status %></span>
+  </div>
+
+  <div class="flex flex-wrap gap-x-6 gap-y-1 text-sm text-gray-600">
+    <span><span class="font-medium text-gray-900">Creator</span> <%= run.creator %></span>
+    <span><span class="font-medium text-gray-900">Source</span> <%= run.source %></span>
+    <span><span class="font-medium text-gray-900">Created</span> <%= run.created_at.strftime("%b %d, %Y %H:%M") %></span>
+    <span><span class="font-medium text-gray-900">Normalizer</span> <%= normalizer_name || "none" %></span>
+  </div>
+
+  <% if run.result.present? && run.status.in?(%w[completed failed]) %>
+    <div class="mt-4 p-3 rounded-lg text-sm <%= run.status == 'failed' ? 'bg-red-50 text-red-800' : 'bg-gray-50 text-gray-800' %>">
+      <p class="font-medium mb-1">Result</p>
+      <pre class="whitespace-pre-wrap break-words"><%= run.result %></pre>
+    </div>
+  <% end %>
+</div>
+
+<%= render_session_header(session) %>
+
+<div class="flex flex-col gap-5">
+  <% if session[:turns].any? %>
+    <% session[:turns].each do |turn| %>
+      <%= render_turn(turn) %>
+    <% end %>
+  <% else %>
+    <p class="text-gray-500 text-sm">No entries for this run.</p>
+  <% end %>
+</div>
+
+<% session[:errors].each do |error| %>
+  <%= render_error(error[:message]) %>
+<% end %>
+
+<%= render_session_footer(session) %>

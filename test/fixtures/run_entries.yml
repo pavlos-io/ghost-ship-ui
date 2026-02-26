@@ -1,0 +1,88 @@
+one:
+  run: one
+  data: >
+    {
+      "type": "system",
+      "subtype": "init",
+      "session_id": "sess_abc123"
+    }
+
+two:
+  run: one
+  data: >
+    {
+      "type": "message_start",
+      "message": {
+        "id": "msg_1",
+        "model": "claude-sonnet-4-5-20250929",
+        "role": "assistant"
+      }
+    }
+
+three:
+  run: one
+  data: >
+    {
+      "type": "content_block_start",
+      "index": 0,
+      "content_block": { "type": "text" }
+    }
+
+four:
+  run: one
+  data: >
+    {
+      "type": "content_block_delta",
+      "index": 0,
+      "delta": { "type": "text_delta", "text": "Hello world!" }
+    }
+
+five:
+  run: one
+  data: >
+    {
+      "type": "content_block_stop",
+      "index": 0
+    }
+
+six:
+  run: one
+  data: >
+    {
+      "type": "content_block_start",
+      "index": 1,
+      "content_block": { "type": "tool_use", "id": "tu_1", "name": "Read" }
+    }
+
+seven:
+  run: one
+  data: >
+    {
+      "type": "content_block_delta",
+      "index": 1,
+      "delta": { "type": "input_json_delta", "partial_json": "{\"file_path\":\"app/models/user.rb\"}" }
+    }
+
+eight:
+  run: one
+  data: >
+    {
+      "type": "content_block_stop",
+      "index": 1
+    }
+
+nine:
+  run: one
+  data: >
+    {
+      "type": "message_delta",
+      "delta": { "stop_reason": "end_turn" },
+      "usage": { "input_tokens": 150, "output_tokens": 42 }
+    }
+
+ten:
+  run: one
+  data: >
+    {
+      "type": "message_stop"
+    }
